@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { ChangeEvent, useState } from 'react'
 import { useContractWrite, useAccount } from 'wagmi'
 import storeItAbi from '../utils/abi/storeItAbi.json'
@@ -7,7 +8,7 @@ export default function Home() {
   const { isConnected } = useAccount()
 
   const { isLoading, isSuccess, write } = useContractWrite({
-    address: '0xecb504d39723b0be0e3a9aa33d646642d1051ee1',
+    address: '0x0526427bbcb2b3fa04d2d11cd2ee23c72ffd64a8',
     abi: storeItAbi,
     functionName: 'store',
   })
@@ -26,6 +27,7 @@ export default function Home() {
     }
 
     setNewNumber(sanitizedValue)
+    console.log(number)
   }
 
   // handles useContractWrite 'write'
@@ -38,7 +40,6 @@ export default function Home() {
   return (
     <div className='h-full border-t text-center grid text-black bg-[#DAF079]  p-6 w-full'>
       <div className='w-full py-2 flex flex-col gap-4'>
-        <h3 className='text-2xl'>useContractWrite</h3>
         <div className='grid gap-3 min-w-[350px] mx-auto border-2 border-black p-3 shadow-[-7px_7px] shadow-black bg-[#EDE1D7] rounded-lg'>
           <div className='grid gap-4 pb-4'>
             <p className='text-start'>
@@ -55,11 +56,18 @@ export default function Home() {
               className='w-32 p-3 shadow-[-4px_4px] hover:shadow-[-0px_0px] mx-auto flex items-center justify-center h-10 bg-white border-2 border-black hover:bg-[#EDE1D7]/90 duration-200 rounded-xl'
               onClick={handlefunctionWrite}
             >
-              {isConnected ? <div>{isLoading ? 'Storing..' : 'Store It'}</div> : 'Connect'}
+              {isLoading ? 'Storing..' : 'Store It'}
             </button>
           </div>
         </div>
-        <span className='text-red-700'>{isConnected ? '' : 'Connect Wallet to continue!'}</span>
+        {isSuccess ? (
+          <p>
+            Number Updated - Check{' '}
+            <Link href='https://sepolia.etherscan.io/address/0x0526427bbcb2b3fa04d2d11cd2ee23c72ffd64a8#readContract' target='_blank' rel='noopener noreferrer'>
+              <span className='font-bold underline hover:text-red-700 duration-200'>Etherscan</span>
+            </Link>
+          </p>
+        ) : null}
       </div>
     </div>
   )
